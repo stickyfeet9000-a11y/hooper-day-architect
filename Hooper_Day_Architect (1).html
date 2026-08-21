@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hooper Day Architect</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#090b12; --panel:#111522; --panel2:#171b2a; --text:#f7f8fb;
+      --muted:#9da5b8; --line:#282e40; --accent:#7c5cff; --accent2:#19d3ae;
+      --orange:#ff9b52; --shadow:0 20px 60px rgba(0,0,0,.35);
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:"Space Grotesk",Arial,sans-serif;background:var(--bg);color:var(--text)}
+    button,input,select{font:inherit}
+    .app{min-height:100vh;background:
+      radial-gradient(circle at 15% 10%,rgba(124,92,255,.22),transparent 30%),
+      radial-gradient(circle at 85% 20%,rgba(25,211,174,.13),transparent 28%),
+      linear-gradient(145deg,#090b12,#0c0f18 55%,#111426)}
+    .screen{min-height:100vh;padding:30px}
+    .welcome{display:flex;align-items:center;justify-content:center}
+    .welcome-inner{max-width:760px;text-align:center;padding:55px 35px;border:1px solid var(--line);border-radius:28px;background:rgba(17,21,34,.82);box-shadow:var(--shadow);backdrop-filter:blur(12px)}
+    .hidden{display:none!important}
+    .eyebrow{margin:0 0 8px;text-transform:uppercase;letter-spacing:.13em;font-size:12px;font-weight:700;color:var(--accent2)}
+    h1{font-size:clamp(32px,6vw,62px);line-height:1.02;margin:10px 0}
+    h2{margin:0 0 8px;font-size:25px}
+    h3{margin:0;font-size:18px}
+    .subtitle,.panel-description{color:var(--muted);line-height:1.6}
+    .btn-primary,.btn-secondary,.chip{
+      border:0;border-radius:12px;padding:13px 17px;cursor:pointer;font-weight:700;
+    }
+    .btn-primary{background:linear-gradient(135deg,var(--accent),#9b83ff);color:white;box-shadow:0 8px 25px rgba(124,92,255,.28)}
+    .btn-secondary{background:#22283a;color:#e8ebf4}
+    .btn-primary:hover,.btn-secondary:hover,.chip:hover{transform:translateY(-1px)}
+    .header{max-width:1180px;margin:0 auto 18px;padding:24px;border:1px solid var(--line);border-radius:22px;background:rgba(17,21,34,.82);box-shadow:var(--shadow)}
+    .header-main{display:flex;gap:25px;justify-content:space-between;align-items:center}
+    .header-main h1{font-size:38px;max-width:720px}
+    .header-badge{min-width:210px;padding:18px;border-radius:18px;background:#0d111c;border:1px solid #3a4260}
+    .badge-label,.badge-note{color:var(--muted);font-size:12px;margin:0}
+    .badge-goal{font-size:19px;font-weight:700;margin:5px 0}
+    .layout{max-width:1180px;margin:auto;display:grid;grid-template-columns:330px 1fr;gap:18px;align-items:start}
+    .panel{background:rgba(17,21,34,.9);border:1px solid var(--line);border-radius:22px;padding:22px;box-shadow:var(--shadow)}
+    .profile-form{display:flex;flex-direction:column;gap:16px}
+    .field-group label{display:block;margin-bottom:7px;font-size:13px;font-weight:700;color:#dce1ed}
+    input,select{width:100%;background:#0b0f18;color:white;border:1px solid var(--line);border-radius:10px;padding:12px;outline:none}
+    input:focus,select:focus{border-color:var(--accent)}
+    .field-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .goal-options{display:flex;flex-wrap:wrap;gap:7px}
+    .chip{background:#202638;color:#cbd1df;border:1px solid #30374b}
+    .chip-selected{background:rgba(124,92,255,.2);border-color:var(--accent);color:white}
+    .hint{font-size:12px;color:var(--muted);margin:0}
+    .dashboard{display:flex;flex-direction:column;gap:18px}
+    .topline{display:flex;justify-content:space-between;align-items:center;gap:12px}
+    .progress{height:10px;background:#252b3b;border-radius:99px;overflow:hidden;margin-top:12px}
+    .progress-fill{height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:.25s}
+    .section-block{margin-top:25px}
+    .section-header{display:flex;justify-content:space-between;align-items:end;gap:10px;margin-bottom:12px}
+    .section-tag{margin:0;color:var(--muted);font-size:12px}
+    .cards-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+    .rec-card{background:var(--panel2);border:1px solid var(--line);border-radius:16px;padding:15px}
+    .rec-card p{margin:7px 0;color:#c3c9d8;line-height:1.5;font-size:14px}
+    .meta{font-size:12px;color:var(--accent2);font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+    .check{display:flex;gap:10px;align-items:flex-start;margin-top:11px;padding-top:10px;border-top:1px solid var(--line);color:#dbe0eb;font-size:13px}
+    .check input{width:18px;margin-top:1px;accent-color:var(--accent)}
+    .schedule-card{border-left:3px solid var(--accent);background:#151a29}
+    .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:15px}
+    .stat{background:#0d111c;border:1px solid var(--line);border-radius:13px;padding:13px;text-align:center}
+    .stat b{display:block;font-size:24px}.stat span{font-size:11px;color:var(--muted)}
+    .footer{max-width:1180px;margin:18px auto;padding:25px;color:var(--muted);font-size:12px;text-align:center}
+    .notice{padding:12px;border-radius:12px;background:#191e2c;border:1px solid var(--line);color:#bfc6d5;font-size:12px;line-height:1.5}
+    @media(max-width:900px){.layout{grid-template-columns:1fr}.header-main{flex-direction:column;align-items:flex-start}.header-badge{width:100%}}
+    @media(max-width:620px){.screen{padding:14px}.cards-grid{grid-template-columns:1fr}.field-grid{grid-template-columns:1fr}.header-main h1{font-size:30px}}
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <section class="screen welcome" id="screen-welcome">
+    <div class="welcome-inner">
+      <p class="eyebrow">Basketball Performance Tracker</p>
+      <h1>Welcome to Hooper Day Architect</h1>
+      <p class="subtitle">Build a complete basketball day with food, strength, recovery, and game-like court work.</p>
+      <button class="btn-primary" id="btn-start">Let's start →</button>
+    </div>
+  </section>
+
+  <div class="hidden" id="screen-main">
+    <section class="screen">
+      <header class="header">
+        <div class="header-main">
+          <div>
+            <p class="eyebrow">Basketball Performance Tracker</p>
+            <h1>Build a complete hooper's day.</h1>
+            <p class="subtitle">Choose your basketball focus and court load. The app builds a practical plan around skill, strength, fueling and recovery.</p>
+          </div>
+          <div class="header-badge">
+            <p class="badge-label">Daily Focus</p>
+            <p class="badge-goal" id="badge-goal">Balanced Development</p>
+            <p class="badge-note" id="badge-note">Strength · Skill · Recovery</p>
+          </div>
+        </div>
+      </header>
+
+      <main class="layout">
+        <section class="panel">
+          <h2>Your profile</h2>
+          <p class="panel-description">Use basketball information instead of body measurements. The plan adjusts around your training load.</p>
+          <form id="profile-form" class="profile-form">
+            <div class="field-group">
+              <label for="experience">Basketball experience</label>
+              <select id="experience">
+                <option value="beginner">Beginner</option>
+                <option value="developing" selected>Developing</option>
+                <option value="advanced">Advanced</option>
+              </select>
+            </div>
+
+            <div class="field-group">
+              <label for="position">Main position</label>
+              <select id="position">
+                <option>Guard</option><option>Wing</option><option>Forward</option><option>Center</option><option>All-around</option>
+              </select>
+            </div>
+
+            <div class="field-group">
+              <label>Development goal</label>
+              <div class="goal-options" id="goal-options">
+                <button type="button" class="chip chip-selected" data-value="skill">Skill</button>
+                <button type="button" class="chip" data-value="athleticism">Athleticism</button>
+                <button type="button" class="chip" data-value="balanced">Balanced</button>
+              </div>
+              <input type="hidden" id="goal" value="skill">
+            </div>
+
+            <div class="field-group">
+              <label for="court-time">Court time today</label>
+              <select id="court-time">
+                <option value="light">Light — 30–45 min</option>
+                <option value="moderate" selected>Moderate — 60–75 min</option>
+                <option value="heavy">Heavy — 90+ min / practice</option>
+              </select>
+            </div>
+
+            <div class="field-group">
+              <label for="practice">Today's team practice?</label>
+              <select id="practice">
+                <option value="no">No</option>
+                <option value="yes">Yes</option>
+              </select>
+            </div>
+
+            <button type="submit" class="btn-primary">Build my hooper day</button>
+            <p class="hint">Tip: If you already have a hard team practice, the app reduces extra work so you can recover.</p>
+          </form>
+        </section>
+
+        <section class="panel dashboard">
+          <div class="topline">
+            <div>
+              <h2>Today's breakdown</h2>
+              <p class="panel-description">A full-day script for a basketball player.</p>
+            </div>
+            <button class="btn-secondary" id="btn-new">↻ New plan</button>
+          </div>
+
+          <div class="stats">
+            <div class="stat"><b id="done">0</b><span>tasks done</span></div>
+            <div class="stat"><b id="total">0</b><span>total tasks</span></div>
+            <div class="stat"><b id="percent">0%</b><span>complete</span></div>
+          </div>
+          <div class="progress"><div class="progress-fill" id="progress-fill"></div></div>
+
+          <div class="notice">
+            <b>Training note:</b> These on-court drills are inspired by game-like decision-making and variable-repetition principles associated with Noah LaRoche. They are not claimed to be his exact personal workouts.
+          </div>
+
+          <section class="section-block">
+            <div class="section-header"><h3>Today's schedule</h3><p class="section-tag">Suggested flow</p></div>
+            <div class="cards-grid" id="schedule-grid"></div>
+          </section>
+
+          <section class="section-block">
+            <div class="section-header"><h3>Meals</h3><p class="section-tag">Fuel · Hydrate · Recover</p></div>
+            <div class="cards-grid" id="meals-grid"></div>
+          </section>
+
+          <section class="section-block">
+            <div class="section-header"><h3>Strength & mobility</h3><p class="section-tag">Basketball-specific movement</p></div>
+            <div class="cards-grid" id="strength-grid"></div>
+          </section>
+
+          <section class="section-block">
+            <div class="section-header"><h3>On-court workout</h3><p class="section-tag">Game-like decision work</p></div>
+            <div class="cards-grid" id="court-grid"></div>
+          </section>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <p>Built as a practice tool. Eat enough to support growth and training, drink regularly, prioritize sleep, and stop if exercise causes pain. For personalized training or nutrition advice, work with a parent/guardian, coach, doctor, or sports dietitian.</p>
+      </footer>
+    </section>
+  </div>
+</div>
+
+<script>
+const STORAGE = "hooper-day-architect-v2";
+const saved = JSON.parse(localStorage.getItem(STORAGE) || "{}");
+let planIndex = saved.planIndex || 0;
+let checks = saved.checks || {};
+
+const plans = [
+  {
+    goal:"Skill Development", note:"Decision-making · Shooting · Finishing",
+    schedule:[
+      ["Morning","Breakfast","Start with carbs + protein + fruit and water."],
+      ["After school","Court","Decision attack + finishing + game-speed shooting."],
+      ["Later","Strength","Short basketball-focused strength session."],
+      ["Evening","Dinner + recovery","Balanced dinner, easy movement and sleep."]
+    ],
+    meals:[
+      ["Breakfast","Oatmeal + banana/berries + milk or yogurt","Carbs for energy + protein + fruit."],
+      ["Lunch","Chicken/turkey sandwich + fruit + yogurt","A simple school-friendly balanced meal."],
+      ["Dinner","Chicken + rice + vegetables + fruit","Carbs + protein + colorful foods for recovery."],
+      ["Snack","Fruit + yogurt or nut-butter toast","Use if you're hungry between meals."]
+    ],
+    strength:[
+      ["Lower body","Squats 3×10 · reverse lunges 3×8/leg · glute bridges 3×12","Leg strength for jumping, sprinting and stopping."],
+      ["Calves","Calf raises 3×15","Helps with repeated jumping and running."],
+      ["Core","Plank 3×30 sec · side plank 2×20 sec/side","Trunk control for balance and changes of direction."],
+      ["Mobility","Leg swings + walking lunges + easy ankle mobility, 5–8 min","Prepare your joints before harder work."]
+    ],
+    court:[
+      ["Random decision attack","10 min","Start at the top. A partner randomly calls LEFT, RIGHT, SHOT or RIM. React to the call."],
+      ["2-step finishing","10 min","Mix right-hand, left-hand, inside-hand, reverse and floater finishes. Change angles."],
+      ["Game-speed shooting","15 min","Sprint, relocate, catch-and-shoot, attack and pull-up. Change the order every round."],
+      ["10 game possessions","10 min","Make every possession different. Focus on reading the situation instead of memorizing a sequence."]
+    ]
+  },
+  {
+    goal:"Athletic Development", note:"Movement · Strength · Change of direction",
+    schedule:[
+      ["Morning","Breakfast","Eat a balanced breakfast and hydrate."],
+      ["After school","Movement + court","Acceleration, defensive movement and finishing."],
+      ["Later","Strength","Controlled lower-body and core work."],
+      ["Evening","Dinner + recovery","Refuel, relax and get a full night's sleep."]
+    ],
+    meals:[
+      ["Breakfast","Eggs + whole-grain toast + fruit + milk","Protein + carbs + fruit."],
+      ["Lunch","Rice/chicken bowl + vegetables + fruit","A solid training-day meal."],
+      ["Dinner","Tacos + beans + fruit + vegetables","Carbs, protein and a variety of foods."],
+      ["Snack","Banana + yogurt or toast + nut butter","A convenient option when hungry."]
+    ],
+    strength:[
+      ["Legs","Squats 3×10 · reverse lunges 3×8/leg","Controlled strength for acceleration and deceleration."],
+      ["Hips","Glute bridges 3×12","Hip strength for sprinting and jumping."],
+      ["Core","Dead bugs 3×10/side · bird dogs 3×8/side","Control your trunk while moving."],
+      ["Lateral movement","Defensive slides 4×15 sec","Practice quick, controlled side-to-side movement."]
+    ],
+    court:[
+      ["Change-of-speed handle","8 min","Dribble while changing from slow to fast. Add crossover or between-the-legs changes."],
+      ["Closeout reaction","10 min","A partner gives a simulated closeout. Decide: shoot, drive or move the ball."],
+      ["Transition attack","12 min","Start in the backcourt, sprint into an attack, then finish or pull up."],
+      ["Random movement shooting","15 min","Change your starting spot and action every rep rather than repeating one pattern."]
+    ]
+  },
+  {
+    goal:"Balanced Development", note:"Strength · Skill · Recovery",
+    schedule:[
+      ["Morning","Breakfast","Balanced meal + water."],
+      ["After school","Court","Handle + decisions + shooting."],
+      ["Later","Strength","Short full-body session."],
+      ["Evening","Dinner + recovery","Balanced dinner, easy mobility and sleep."]
+    ],
+    meals:[
+      ["Breakfast","Greek yogurt + granola + berries + toast","Carbs + protein + fruit."],
+      ["Lunch","Bean & cheese burrito + fruit + yogurt","Easy balanced lunch."],
+      ["Dinner","Pasta + meat sauce + vegetables","Good training-day combination."],
+      ["Snack","Fruit + yogurt or nut-butter toast","Choose based on hunger."]
+    ],
+    strength:[
+      ["Full body","Squats 2×10 · push-ups 2×8–15 · rows 2×10","Train legs and upper body without chasing maximum weight."],
+      ["Core","Plank 2×30 sec · dead bugs 2×10/side","Build control and stability."],
+      ["Calves + hips","Calf raises 2×15 · glute bridges 2×12","Useful for running, jumping and landing."],
+      ["Mobility","5–8 min easy mobility","Keep this easy, especially before a hard court day."]
+    ],
+    court:[
+      ["Ball-handling flow","8 min","Right, left, crossover, between-the-legs and behind-the-back. Change speed."],
+      ["Read the defender","12 min","Have a partner change defensive positioning. Pick the best response instead of following a fixed script."],
+      ["Movement shooting","15 min","Shoot after cuts, relocations, dribbles and closeouts. Vary the sequence."],
+      ["Game possessions","10 min","Play 1-on-1, 2-on-2, or simulate possessions. Judge yourself on decisions, not just makes."]
+    ]
+  }
+];
+
+function save(){
+  localStorage.setItem(STORAGE, JSON.stringify({planIndex,checks,profile:{
+    experience:document.getElementById("experience").value,
+    position:document.getElementById("position").value,
+    goal:document.getElementById("goal").value,
+    court:document.getElementById("court-time").value,
+    practice:document.getElementById("practice").value
+  }}));
+}
+function card(section,index,title,body,meta){
+  const id = section+"-"+index;
+  return `<article class="rec-card">
+    <div class="meta">${meta || ""}</div>
+    <h3>${title}</h3><p>${body}</p>
+    <label class="check"><input type="checkbox" data-id="${id}" ${checks[id]?"checked":""}> Mark complete</label>
+  </article>`;
+}
+function render(){
+  const p=plans[planIndex];
+  document.getElementById("badge-goal").textContent=p.goal;
+  document.getElementById("badge-note").textContent=p.note;
+  document.getElementById("schedule-grid").innerHTML=p.schedule.map((x,i)=>card("schedule",i,x[1],x[2],x[0])).join("");
+  document.getElementById("meals-grid").innerHTML=p.meals.map((x,i)=>card("meal",i,x[0],x[1],"Fuel")).join("");
+  document.getElementById("strength-grid").innerHTML=p.strength.map((x,i)=>card("strength",i,x[0],x[1],"Strength")).join("");
+  document.getElementById("court-grid").innerHTML=p.court.map((x,i)=>card("court",i,x[0],x[1],"Court")).join("");
+  document.querySelectorAll("[data-id]").forEach(el=>{
+    el.addEventListener("change",e=>{checks[e.target.dataset.id]=e.target.checked;save();updateProgress();});
+  });
+  updateProgress();
+}
+function updateProgress(){
+  const boxes=[...document.querySelectorAll("[data-id]")];
+  const done=boxes.filter(x=>x.checked).length, total=boxes.length;
+  document.getElementById("done").textContent=done;
+  document.getElementById("total").textContent=total;
+  const pct=total?Math.round(done/total*100):0;
+  document.getElementById("percent").textContent=pct+"%";
+  document.getElementById("progress-fill").style.width=pct+"%";
+}
+function buildPlan(){
+  const goal=document.getElementById("goal").value;
+  if(goal==="skill")planIndex=0;
+  else if(goal==="athleticism")planIndex=1;
+  else planIndex=2;
+  checks={};
+  save(); render();
+}
+document.getElementById("btn-start").onclick=()=>{
+  document.getElementById("screen-welcome").classList.add("hidden");
+  document.getElementById("screen-main").classList.remove("hidden");
+  render();
+};
+document.querySelectorAll(".chip").forEach(chip=>{
+  chip.onclick=()=>{
+    document.querySelectorAll(".chip").forEach(c=>c.classList.remove("chip-selected"));
+    chip.classList.add("chip-selected");
+    document.getElementById("goal").value=chip.dataset.value;
+  };
+});
+document.getElementById("profile-form").addEventListener("submit",e=>{
+  e.preventDefault(); buildPlan();
+});
+document.getElementById("btn-new").onclick=()=>{
+  planIndex=(planIndex+1)%plans.length; checks={}; save(); render();
+};
+if(saved.profile){
+  document.getElementById("experience").value=saved.profile.experience||"developing";
+  document.getElementById("position").value=saved.profile.position||"Guard";
+  document.getElementById("court-time").value=saved.profile.court||"moderate";
+  document.getElementById("practice").value=saved.profile.practice||"no";
+  const g=saved.profile.goal||"skill";
+  document.getElementById("goal").value=g;
+  document.querySelectorAll(".chip").forEach(c=>c.classList.toggle("chip-selected",c.dataset.value===g));
+}
+</script>
+</body>
+</html>
